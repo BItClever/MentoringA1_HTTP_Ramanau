@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MentoringA1_HTTP_Ramanau", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{814B1619-F604-4FE7-AD32-25A0EE12B4F5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{B41C1EB5-300A-4A1F-A4FD-4431E792E21C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{6557FB8E-784A-416A-95AB-D5CC4F3E66A7}"
+	ProjectSection(SolutionItems) = preProject
+		Screenshots\Custom event log.png = Screenshots\Custom event log.png
+		Screenshots\Ordered requests logs.png = Screenshots\Ordered requests logs.png
+		Screenshots\Request log.png = Screenshots\Request log.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
