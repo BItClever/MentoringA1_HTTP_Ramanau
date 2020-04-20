@@ -8,64 +8,126 @@ namespace DAL
 {
     public class OrderRepository : IOrderRepository
     {
+        private readonly ILogger _logger;
+
+        public OrderRepository(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public bool Create(Order order)
         {
-            using (var context = new NorthwindEntities())
+            _logger.LogInfo("Adding order to database");
+            try
             {
-                context.Orders.Add(order);
-                context.SaveChanges();
-                return true;
+                using (var context = new NorthwindEntities())
+                {
+
+                    context.Orders.Add(order);
+                    context.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e);
+                throw;
             }
         }
 
 
         public Order Get(int id)
         {
-            using (var context = new NorthwindEntities())
+            _logger.LogInfo($"Gettting order by Id ={id} from database");
+            try
             {
-                var result = context.Orders.FirstOrDefault(order => order.OrderID == id);
-                return result;
+                using (var context = new NorthwindEntities())
+                {
+                    var result = context.Orders.FirstOrDefault(order => order.OrderID == id);
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e);
+                throw;
             }
         }
 
         public IEnumerable<Order> GetAll()
         {
-            using (var context = new NorthwindEntities())
+            _logger.LogInfo($"Gettting all orders from database");
+            try
             {
-                var result = context.Orders.ToList();
-                return result;
+                using (var context = new NorthwindEntities())
+                {
+                    var result = context.Orders.ToList();
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e);
+                throw;
             }
         }
 
         public bool ChangeOrderDate(DateTime newOrderDate, int orderID)
         {
-            using (var context = new NorthwindEntities())
+            _logger.LogInfo($"Changing newOrderDate by Id ={orderID} from database");
+            try
             {
-                var order = context.Orders.FirstOrDefault(o => o.OrderID == orderID);
-                order.OrderDate = newOrderDate;
-                context.SaveChanges();
-                return true;
+                using (var context = new NorthwindEntities())
+                {
+                    var order = context.Orders.FirstOrDefault(o => o.OrderID == orderID);
+                    order.OrderDate = newOrderDate;
+                    context.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e);
+                throw;
             }
         }
 
         public bool ChangeShippedDate(DateTime newShippedDate, int orderID)
         {
-            using (var context = new NorthwindEntities())
+            _logger.LogInfo($"Changing newShippedDate by Id ={orderID} from database");
+            try
             {
-                var order = context.Orders.FirstOrDefault(o => o.OrderID == orderID);
-                order.ShippedDate = newShippedDate;
-                context.SaveChanges();
-                return true;
+                using (var context = new NorthwindEntities())
+                {
+                    var order = context.Orders.FirstOrDefault(o => o.OrderID == orderID);
+                    order.ShippedDate = newShippedDate;
+                    context.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e);
+                throw;
             }
         }
 
         public bool DeleteOrder(Order order)
         {
-            using (var context = new NorthwindEntities())
+            _logger.LogInfo($"Deleting order by Id ={order.OrderID} from database");
+            try
             {
-                context.Orders.Remove(order);
-                context.SaveChanges();
-                return true;
+                using (var context = new NorthwindEntities())
+                {
+                    context.Orders.Remove(order);
+                    context.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e);
+                throw;
             }
         }
     }

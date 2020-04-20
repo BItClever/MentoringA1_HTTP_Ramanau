@@ -2,6 +2,7 @@
 using DAL.Models;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace MentoringA1_HTTP_Ramanau.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly UnitOfWork _unitOfWork;
-        public OrdersController(UnitOfWork unitOfWork)
+        public OrdersController(UnitOfWork unitOfWork, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
         }
