@@ -26,24 +26,34 @@ namespace MentoringA1_HTTP_Ramanau.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int? id)
+        public async Task<IActionResult> GetById(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            var cacheKey = id.Value.ToString();
+            Order order;
+            string serializedOrder;
+
+            var encodedOrder = await _cache.GetAsync(cacheKey);
+
+            if (encodedOrder != null)
+            {
+                serializedOrder = Encoding.UTF8.GetString(encodedOrder);
+                order = JsonConvert.DeserializeObject<Order>(serializedOrder);
+            }
             else
             {
-                var result = _unitOfWork.GetOrderById(id.Value);
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return Ok(result);
-                }
+                order = _unitOfWork.GetOrderById(id.Value);
+                serializedOrder = JsonConvert.SerializeObject(order);
+                encodedOrder = Encoding.UTF8.GetBytes(serializedOrder);
+                var options = new DistributedCacheEntryOptions()
+                                .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                                .SetAbsoluteExpiration(DateTime.Now.AddHours(6));
+                await _cache.SetAsync(cacheKey, encodedOrder, options);
             }
+            return Ok(order);
         }
 
         [HttpGet]
