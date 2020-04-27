@@ -37,6 +37,8 @@ namespace MentoringA1_HTTP_Ramanau
             services.AddTransient<ILogger>(log => new Logger(_configuration.GetValue<string>("ApplicationInsights:InstrumentationKey")));
             services.AddTransient<UnitOfWork>();
             services.AddApplicationInsightsTelemetry();
+
+            services.AddStackExchangeRedisCache(options => options.Configuration = _configuration.GetConnectionString("RedisCache"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

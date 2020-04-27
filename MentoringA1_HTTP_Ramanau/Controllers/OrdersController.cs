@@ -2,9 +2,14 @@
 using DAL.Models;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MentoringA1_HTTP_Ramanau.Controllers
 {
@@ -13,9 +18,11 @@ namespace MentoringA1_HTTP_Ramanau.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly UnitOfWork _unitOfWork;
-        public OrdersController(UnitOfWork unitOfWork, IConfiguration config)
+        private readonly IDistributedCache _cache;
+        public OrdersController(UnitOfWork unitOfWork, IConfiguration config, IDistributedCache cache)
         {
             _unitOfWork = unitOfWork;
+            _cache = cache;
         }
 
         [HttpGet("{id}")]
@@ -41,10 +48,30 @@ namespace MentoringA1_HTTP_Ramanau.Controllers
 
         [HttpGet]
         [EnableQuery()]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var result = _unitOfWork.GetAllOrders().OrderBy(o => o.OrderID);
-            return Ok(result);
+            var cacheKey = "Orders";
+            List<Order> orders;
+            string serializedOrders;
+
+            var encodedOrders = await _cache.GetAsync(cacheKey);
+
+            if (encodedOrders != null)
+            {
+                serializedOrders = Encoding.UTF8.GetString(encodedOrders);
+                orders = JsonConvert.DeserializeObject<List<Order>>(serializedOrders);
+            }
+            else
+            {
+                orders = _unitOfWork.GetAllOrders().OrderBy(o => o.OrderID).ToList();
+                serializedOrders = JsonConvert.SerializeObject(orders);
+                encodedOrders = Encoding.UTF8.GetBytes(serializedOrders);
+                var options = new DistributedCacheEntryOptions()
+                                .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                                .SetAbsoluteExpiration(DateTime.Now.AddHours(6));
+                await _cache.SetAsync(cacheKey, encodedOrders, options);
+            }
+            return Ok(orders);
         }
 
 
