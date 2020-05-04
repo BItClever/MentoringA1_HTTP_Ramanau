@@ -10,23 +10,39 @@
 namespace DAL.Models
 {
     using System;
-    using System.Collections.Generic;
-    
+    using System.Xml.Serialization;
+
+    [Serializable]
+    [XmlRoot("Order")]
     public partial class Order
     {
+        [XmlElement("OrderID")]
         public int OrderID { get; set; }
+        [XmlElement("CustomerID")]
         public string CustomerID { get; set; }
+        [XmlElement("EmployeeID")]
         public Nullable<int> EmployeeID { get; set; }
+        [XmlElement("OrderDate")]
         public Nullable<System.DateTime> OrderDate { get; set; }
+        [XmlElement("RequiredDate")]
         public Nullable<System.DateTime> RequiredDate { get; set; }
+        [XmlElement("ShippedDate")]
         public Nullable<System.DateTime> ShippedDate { get; set; }
+        [XmlElement("ShipVia")]
         public Nullable<int> ShipVia { get; set; }
+        [XmlElement("Freight")]
         public Nullable<decimal> Freight { get; set; }
+        [XmlElement("ShipName")]
         public string ShipName { get; set; }
+        [XmlElement("ShipAddress")]
         public string ShipAddress { get; set; }
+        [XmlElement("ShipCity")]
         public string ShipCity { get; set; }
+        [XmlElement("ShipRegion")]
         public string ShipRegion { get; set; }
+        [XmlElement("ShipPostalCode")]
         public string ShipPostalCode { get; set; }
+        [XmlElement("ShipCountry")]
         public string ShipCountry { get; set; }
     }
 }

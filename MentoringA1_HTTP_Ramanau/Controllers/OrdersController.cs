@@ -100,7 +100,7 @@ namespace MentoringA1_HTTP_Ramanau.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Order order)
+        public IActionResult Post([FromBody]Order order)
         {
             if (ModelState.IsValid)
             {

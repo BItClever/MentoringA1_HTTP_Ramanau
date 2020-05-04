@@ -27,8 +27,11 @@ namespace MentoringA1_HTTP_Ramanau
 
             services.AddControllers(options =>
             {
+                options.RespectBrowserAcceptHeader = true;
                 options.OutputFormatters.Add(new XmlOutputFormatter());
                 options.OutputFormatters.Add(new ExcelOutputFormatter());
+                options.OutputFormatters.Add(new SOAPOutputFormatter());
+                options.InputFormatters.Add(new SOAPInputFormatter());
                 options.RespectBrowserAcceptHeader = true;
             });
 
